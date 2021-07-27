@@ -1,97 +1,77 @@
 .chat {
-    
-    flex: 0.65;
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  flex: 0.65;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat__header {
-    background-color: rgb(241, 241, 241);
-    height: 50px;
-    justify-self: start;
-    
-    display: flex;
-    
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid lightgrey;
-    /* position: fixed;
+  background-color: rgb(241, 241, 241);
+  height: 50px;
+  justify-self: start;
+  align-items: center;
+
+  display: flex;
+
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid lightgrey;
+  /* position: fixed;
     top: 0;
     right: 0; */
 }
 
 h4 {
-    padding-right: 20px;
-    font-size: 14px;
-
+  padding-right: 20px;
+  font-size: 14px;
 }
 
 h4.chat__details {
-    color: blue;
+  color: blue;
 }
-
 
 .chat__messages {
-    overflow: scroll;
-    /* height: 100vh; */
-    position: fixed;
-    top: 50px;
-    bottom: 70px;
-    right: 0;
-    left: 35vw;
-    
-    
-    
+  overflow: scroll;
+  /* height: 100vh; */
+  position: fixed;
+  top: 50px;
+  bottom: 70px;
+  right: 0;
+  left: 35vw;
 }
-
 
 .chat__input {
-    
-    height: 70px;
-    
-    
-    
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100vw;
+  height: 70px;
 
-    display: flex;
-}
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
 
-
-.chat__input-left {
-    flex: 0.35
-}
-
-.chat__input-right {
-    flex: 0.65;
-
-    background-color: rgb(241, 241, 241);
-    border-top: 1px solid lightgrey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: rgb(241, 241, 241);
+  border-top: 1px solid lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 form.chat__input-wrapper {
-    background-color: #fff;
-    border-radius: 10px;
-    width: 70%;
-    margin-right: 20px;
-    display: flex;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 70%;
+  margin-right: 20px;
+  display: flex;
 }
 
 .chat__input input {
-    width: 100%;
-    height: 25px;
-    background: transparent;
-    outline-width: 0;
-    border: 0;
-    padding-left: 10px;
+  width: 100%;
+  height: 25px;
+  background: transparent;
+  outline-width: 0;
+  border: 0;
+  padding-left: 10px;
 }
 
-.chat__input-right > form > button {
-    display: none;
-} 
+.chat__input > form > button {
+  display: none;
+}
