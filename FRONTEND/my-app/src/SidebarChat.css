@@ -1,0 +1,38 @@
+.sidebarChat {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 13px;
+    height: 70px;
+
+    border-bottom: 1px solid lightgrey;
+}
+
+.sidebarChat:hover {
+    background-color: #3e93fd;
+}
+
+.sidebarChat__avatar {
+    margin: 0px 10px;
+}
+
+.sidebarChat__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    flex: 1;
+    margin-right: 10px;
+}
+
+.sidebarChat__info-1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+.sidebarChat__name {
+    font-weight: 600;
+    font-size: 15px;
+}

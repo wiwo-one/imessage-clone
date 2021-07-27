@@ -1,0 +1,32 @@
+.message {
+    
+    height: 80px;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.message__top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.message__text {
+    background-color: #3e93fd;
+    padding: 10px;
+    border-radius: 15px;
+    color: white;
+    font-size: 14px;
+}
+
+.message__avatar {
+    margin: 10px;
+}
+
+.mesage__data {
+    align-self: flex-end;
+    font-size: 8px;
+    margin-right: 20px;
+}
