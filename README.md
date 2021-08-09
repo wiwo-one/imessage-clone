@@ -2,6 +2,8 @@
 
 App that supposed to look like iMessage
 
+🚀 Features:
+
 - Login/Register using Firebase Auth
 - Send messages in existing chats
 - Create new chat
