@@ -6,12 +6,15 @@ import SidebarChat from "./SidebarChat";
 import { Avatar, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import RateReviewIcon from "@material-ui/icons/RateReview";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "./features/userSlice";
+import { selectChat, openChatAction, closeChatAction } from "./features/chatSlice";
 import db, { auth } from "./Firebase";
 
 function Sidebar() {
   const user = useSelector(selectUser);
+  const chat = useSelector(selectChat);
+  const dispatch = useDispatch();
 
   const [chats, setChats] = useState([]);
 
@@ -24,6 +27,13 @@ function Sidebar() {
       setChats(
         querySnapshot.docs?.map((doc) => ({
           id: doc.id,
+          ...doc.data(),
+          name: doc.data().name,
+          lastAvatar: doc.data().lastAvatar,
+          lastName: doc.data().lastName,
+          creationTime: doc.data().creationTime,
+          lastEdit: doc.data().lastEdit,
+          name: doc.data().name,
           data: doc.data(),
         }))
       );
@@ -32,14 +42,18 @@ function Sidebar() {
     });
   }, []);
 
+  const handleChatClick = (doc) => {
+    dispatch(
+      openChatAction({
+        ...doc,
+      })
+    );
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar__header">
-        <Avatar
-          onClick={() => auth.signOut()}
-          src={user.photo}
-          className="sidebar__avatar"
-        />
+        <Avatar onClick={() => auth.signOut()} src={user.photo} className="sidebar__avatar" />
         <div className="sidebar__search">
           <SearchIcon />
           <input placeholder="Search" />
@@ -49,8 +63,14 @@ function Sidebar() {
         </IconButton>
       </div>
       <div className="sidebar__chats">
-        {chats.map((doc) => (
-          <SidebarChat name={doc.data.name} />
+        {chats.map((doc, index) => (
+          <div
+            key={doc.id}
+            onClick={() => {
+              handleChatClick(doc);
+            }}>
+            <SidebarChat name={doc.name} lastEdit={doc.lastEdit} lastName={doc.lastName} />
+          </div>
         ))}
       </div>
     </div>

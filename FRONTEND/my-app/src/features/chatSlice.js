@@ -26,6 +26,6 @@ export const chatSlice = createSlice({
 
 export const { openChatAction, closeChatAction } = chatSlice.actions;
 
-export const selectChat = (state) => state.chat.name;
+export const selectChat = (state) => state.chat;
 
 export default chatSlice.reducer;
