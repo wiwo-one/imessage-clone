@@ -94,6 +94,7 @@ function Sidebar() {
               lastEdit={transformMomentToString(doc.lastEdit)}
               lastName={doc.lastName}
               lastAvatar={doc.lastAvatar}
+              isActive={doc.id === chat.id ? true : false}
             />
           </div>
         ))}

@@ -4,9 +4,9 @@ import { Avatar } from "@material-ui/core";
 
 import { transformUnknownDateFormat, transformMomentToString } from "./utils";
 
-function SidebarChat({ name, lastEdit, lastName, lastAvatar }) {
+function SidebarChat({ name, lastEdit, lastName, lastAvatar, isActive }) {
   return (
-    <div className="sidebarChat">
+    <div className={`sidebarChat ${isActive && "sidebarChat--active"}`}>
       <Avatar className="sidebarChat__avatar" src={lastAvatar} />
       <div className="sidebarChat__info">
         <div className="sidebarChat__info-1">

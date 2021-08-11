@@ -12,6 +12,9 @@ import moment from "moment";
 import { transformMomentToString, transformUnknownDateFormat } from "./utils";
 import { createRef } from "react";
 
+//animacja nowych wiadomości
+import { Flipper, Flipped } from "react-flip-toolkit";
+
 function Chat() {
   //redux
   const user = useSelector(selectUser);
@@ -61,6 +64,7 @@ function Chat() {
           const sortedMessages = sortByCreationTime(
             querySnapshot.docs?.map((mess) => ({
               ...mess.data(),
+              id: mess.id,
               creationTime: transformUnknownDateFormat(mess.data().creationTime),
             }))
           );
@@ -86,11 +90,9 @@ function Chat() {
   const lastMessageRef = createRef();
 
   useEffect(() => {
-    console.dir(lastMessageRef);
     if (lastMessageRef && lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView();
     }
-    console.log("messages changing");
   }, [messages]);
 
   //to point last message
@@ -105,16 +107,25 @@ function Chat() {
 
       {/* chat messages */}
       <div className="chat__messages">
-        {messages.map((mess, index) => (
-          <Message
-            key={index}
-            incomming={mess.authorUid === user.uid ? true : false}
-            content={mess.content}
-            {...mess}
-            creationTime={transformMomentToString(mess.creationTime)}
-            ref={lastMessageRef}
-          />
-        ))}
+        <Flipper flipKey={messages.length} onComplete={() => console.log("oncomplete of flip")}>
+          {messages.map((mess, index) => (
+            <Flipped
+              key={mess.id}
+              onComplete={(el) => {
+                console.log("Flpped onComplete + Element: ");
+                console.dir(el);
+              }}>
+              <Message
+                key={index}
+                incomming={mess.authorUid === user.uid ? true : false}
+                content={mess.content}
+                {...mess}
+                creationTime={transformMomentToString(mess.creationTime)}
+                ref={lastMessageRef}
+              />
+            </Flipped>
+          ))}
+        </Flipper>
       </div>
 
       {/* chat input */}
