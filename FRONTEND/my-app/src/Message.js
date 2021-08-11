@@ -1,9 +1,12 @@
 import React from "react";
 import "./Message.css";
 import { Avatar } from "@material-ui/core";
-function Message({ content, creationTime, authorPhoto, authorName, incomming = false }) {
+import { forwardRef } from "react";
+const Message = forwardRef(({ content, creationTime, authorPhoto, authorName, incomming }, ref) => {
+  //const messageRef = forwardRef();
+
   return (
-    <div className={`message ${!incomming && "message--incomming"}`}>
+    <div ref={ref} className={`message ${!incomming && "message--incomming"}`}>
       <div className="message__top">
         <div className="message__text">{content}</div>
         <Avatar src={authorPhoto} className="message__avatar" />
@@ -13,6 +16,6 @@ function Message({ content, creationTime, authorPhoto, authorName, incomming = f
       </p>
     </div>
   );
-}
+});
 
 export default Message;

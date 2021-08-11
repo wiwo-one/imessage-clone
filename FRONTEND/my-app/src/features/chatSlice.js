@@ -11,11 +11,11 @@ export const chatSlice = createSlice({
   reducers: {
     openChatAction: (state, action) => {
       state.open = true;
-      const { name, id, creationTime } = action.payload;
+      const { name, id } = action.payload;
       state.name = name;
       state.id = id;
-      state.creationTime = creationTime;
-      state.data = action.payload.data;
+      //state.creationTime = creationTime;
+      //state.data = {...action.payload.data, action.payload.data};
     },
     closeChatAction: (state) => {
       state.open = false;

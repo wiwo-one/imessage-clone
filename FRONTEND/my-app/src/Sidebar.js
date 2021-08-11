@@ -25,7 +25,7 @@ function Sidebar() {
 
   //tylko po załadowaniu
   useEffect(() => {
-    db.collection("chats").onSnapshot((querySnapshot) => {
+    const unsubscribe = db.collection("chats").onSnapshot((querySnapshot) => {
       const sortedChats = sortChatsByLastEdit(
         querySnapshot.docs?.map((doc) => ({
           id: doc.id,
@@ -44,12 +44,18 @@ function Sidebar() {
       setChats(sortedChats);
       //sortChatsByDate(chats);
     });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleChatClick = (doc) => {
     dispatch(
       openChatAction({
         ...doc,
+        lastEdit: transformMomentToString(transformUnknownDateFormat(doc.lastEdit)),
+        creationTime: transformMomentToString(transformUnknownDateFormat(doc.creationTime)),
+        data: null,
       })
     );
   };
@@ -87,10 +93,8 @@ function Sidebar() {
               name={doc.name}
               lastEdit={transformMomentToString(doc.lastEdit)}
               lastName={doc.lastName}
+              lastAvatar={doc.lastAvatar}
             />
-
-            {/* {console.log(doc.name + " --- " + doc.lastEdit)} */}
-            {console.log(transformUnknownDateFormat(doc.lastEdit))}
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./Chat.css";
 import Message from "./Message";
 import MicNoneIcon from "@material-ui/icons/MicNone";
@@ -10,6 +10,7 @@ import { selectUser } from "./features/userSlice";
 import { selectChat, openChatAction, closeChatAction } from "./features/chatSlice";
 import moment from "moment";
 import { transformMomentToString, transformUnknownDateFormat } from "./utils";
+import { createRef } from "react";
 
 function Chat() {
   //redux
@@ -32,20 +33,30 @@ function Chat() {
         authorUid: user.uid,
         authorPhoto: user.photo,
         content: input,
-        creationTime: new Date().toLocaleString("pl-PL"),
+        creationTime: new Date(),
+      })
+      .then(() => {
+        db.collection("chats")?.doc(chat.id).set(
+          {
+            lastEdit: new Date(),
+            lastName: user.displayName,
+            lastAvatar: user.photo,
+          },
+          { merge: true }
+        );
       });
 
     setInput("");
   };
 
+  //update obiektu chat
   useEffect(() => {
-    console.dir(chat);
-    console.log(chat.id);
-    if (chat.open === true) {
-      db.collection("chats")
+    let unsubscribe = null;
+    if (chat.open) {
+      unsubscribe = db
+        .collection("chats")
         ?.doc(chat.id)
         ?.collection("messages")
-        .orderBy("creationTime", "desc")
         .onSnapshot((querySnapshot) => {
           const sortedMessages = sortByCreationTime(
             querySnapshot.docs?.map((mess) => ({
@@ -56,10 +67,33 @@ function Chat() {
           setMessages(sortedMessages);
         });
     }
+    return () => {
+      if (chat.open) unsubscribe();
+    };
   }, [chat]);
 
   //sorting using array.sort to compare dates in moment format
   const sortByCreationTime = (chats) => chats.sort((a, b) => moment(a.creationTime) - moment(b.creationTime));
+
+  // const lastMessageCallbackRef = useCallback(
+  //   (node) => {
+  //     node.scrollIntoView();
+  //     console.log("lastMessageCallbackRef");
+  //   },
+  //   [messages]
+  // );
+
+  const lastMessageRef = createRef();
+
+  useEffect(() => {
+    console.dir(lastMessageRef);
+    if (lastMessageRef && lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView();
+    }
+    console.log("messages changing");
+  }, [messages]);
+
+  //to point last message
 
   return (
     <div className="chat">
@@ -78,6 +112,7 @@ function Chat() {
             content={mess.content}
             {...mess}
             creationTime={transformMomentToString(mess.creationTime)}
+            ref={lastMessageRef}
           />
         ))}
       </div>

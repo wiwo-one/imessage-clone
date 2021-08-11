@@ -4,10 +4,10 @@ import { Avatar } from "@material-ui/core";
 
 import { transformUnknownDateFormat, transformMomentToString } from "./utils";
 
-function SidebarChat({ name, lastEdit, lastName }) {
+function SidebarChat({ name, lastEdit, lastName, lastAvatar }) {
   return (
     <div className="sidebarChat">
-      <Avatar className="sidebarChat__avatar" />
+      <Avatar className="sidebarChat__avatar" src={lastAvatar} />
       <div className="sidebarChat__info">
         <div className="sidebarChat__info-1">
           <div className="sidebarChat__name">{name}</div>
