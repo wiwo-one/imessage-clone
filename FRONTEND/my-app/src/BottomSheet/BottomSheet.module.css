@@ -1,0 +1,32 @@
+.Container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* background-color: white; */
+  /* outline: 2px blue; */
+}
+
+.Top {
+  height: 40px;
+  flex-grow: 0;
+  background-color: #f1f1f1;
+  align-self: stretch;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Top h4 {
+  color: blue;
+  margin-right: 0px;
+}
+
+.Content {
+  flex-grow: 1;
+  width: 100%;
+}

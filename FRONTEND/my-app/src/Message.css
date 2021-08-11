@@ -38,3 +38,8 @@
   margin-left: 20px;
   align-self: flex-start;
 }
+
+.message--incomming .message__text {
+  background-color: #f1f1f1;
+  color: black;
+}

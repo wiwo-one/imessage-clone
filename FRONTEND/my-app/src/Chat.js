@@ -8,6 +8,8 @@ import db from "./Firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { selectChat, openChatAction, closeChatAction } from "./features/chatSlice";
+import moment from "moment";
+import { transformMomentToString, transformUnknownDateFormat } from "./utils";
 
 function Chat() {
   //redux
@@ -28,6 +30,7 @@ function Chat() {
       .add({
         authorName: user.displayName,
         authorUid: user.uid,
+        authorPhoto: user.photo,
         content: input,
         creationTime: new Date().toLocaleString("pl-PL"),
       });
@@ -44,14 +47,19 @@ function Chat() {
         ?.collection("messages")
         .orderBy("creationTime", "desc")
         .onSnapshot((querySnapshot) => {
-          setMessages(
+          const sortedMessages = sortByCreationTime(
             querySnapshot.docs?.map((mess) => ({
               ...mess.data(),
+              creationTime: transformUnknownDateFormat(mess.data().creationTime),
             }))
           );
+          setMessages(sortedMessages);
         });
     }
   }, [chat]);
+
+  //sorting using array.sort to compare dates in moment format
+  const sortByCreationTime = (chats) => chats.sort((a, b) => moment(a.creationTime) - moment(b.creationTime));
 
   return (
     <div className="chat">
@@ -66,9 +74,10 @@ function Chat() {
         {messages.map((mess, index) => (
           <Message
             key={index}
-            incomming={mess.authorUid === user.id ? true : false}
+            incomming={mess.authorUid === user.uid ? true : false}
             content={mess.content}
             {...mess}
+            creationTime={transformMomentToString(mess.creationTime)}
           />
         ))}
       </div>
