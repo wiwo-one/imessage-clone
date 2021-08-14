@@ -70,7 +70,7 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
         handleClose();
       })
       .catch((error) => {
-        console.error("Error removing document: ", error);
+        console.error("Error removing document :( ): ", error);
       });
   };
 
@@ -138,6 +138,10 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
           <MenuGroupElement>
             <Left>lastAvatar</Left>
             <Right>{chat?.lastAvatar?.slice(0, 150)}</Right>
+          </MenuGroupElement>
+          <MenuGroupElement>
+            <Left>creatorUid</Left>
+            <Right>{chat?.creatorUid}</Right>
           </MenuGroupElement>
         </MenuGroup>
         <MenuGroupButton

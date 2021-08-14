@@ -34,6 +34,7 @@ h4.chat__details {
 .chat__messages {
   overflow: scroll;
   height: 100%;
+  margin-bottom: 70px;
 }
 
 .chat__messages {

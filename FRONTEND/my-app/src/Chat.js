@@ -35,27 +35,39 @@ function Chat() {
     e.preventDefault();
     setIsMessageSent(true);
 
-    db.collection("chats")
-      ?.doc(chat.id)
-      ?.collection("messages")
-      .add({
-        authorName: user.displayName,
-        authorUid: user.uid,
-        authorPhoto: user.photo,
-        content: input,
-        creationTime: new Date(),
-      })
-      .then(() => {
-        const actualDate = new Date();
-        db.collection("chats")?.doc(chat.id).set(
-          {
-            lastEdit: actualDate,
-            lastName: user.displayName,
-            lastAvatar: user.photo,
-          },
-          { merge: true }
-        );
-      });
+    try {
+      db.collection("chats")
+        ?.doc(chat.id)
+        ?.collection("messages")
+        .add({
+          authorName: user.displayName,
+          authorUid: user.uid,
+          authorPhoto: user.photo,
+          content: input,
+          creationTime: new Date(),
+        })
+        .then(() => {
+          const actualDate = new Date();
+          db.collection("chats")
+            ?.doc(chat.id)
+            .update({
+              lastEdit: actualDate,
+              lastName: user.displayName,
+              lastAvatar: user.photo,
+            })
+            .then((s) => {
+              console.log("edytowalem info w chatcie");
+            })
+            .catch((e) => {
+              console.log("error przy edycji chatu (zmiana ostatnich) ", e);
+            });
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
+    } catch (e) {
+      console.log("ERROR", e);
+    }
 
     setInput("");
   };
@@ -191,6 +203,7 @@ function Chat() {
           open={isEditChatBSOpen}
           handleClose={() => {
             setIsEditChatBSOpen(false);
+            handleCloseChatClick();
           }}>
           <ChatDetails open={isEditChatBSOpen} />
         </Modal>

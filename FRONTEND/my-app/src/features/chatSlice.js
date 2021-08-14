@@ -29,6 +29,8 @@ export const chatSlice = createSlice({
       state.lastName = action.payload.lastName;
       state.lastAvatar = action.payload.lastAvatar;
       state.name = action.payload.name;
+      state.creatorUid = action.payload.creatorUid;
+      state.id = action.payload.id;
     },
     closeChatAction: (state) => {
       //state = {};

@@ -26,6 +26,9 @@ const NewChatBS = React.forwardRef(({ open, handleClose }, ref) => {
         lastEdit: new Date(),
         lastAvatar: user.photo,
         creationTime: new Date(),
+        creatorName: user.displayName,
+        creatorAvatar: user.photo,
+        creatorUid: user.uid,
         name: chatName,
       })
       .then((newChat) => {
@@ -33,9 +36,10 @@ const NewChatBS = React.forwardRef(({ open, handleClose }, ref) => {
         console.dir(newChat.id);
 
         newChat.get().then((doc) => {
-          //doc.data
+          console.log("dispatchuje zmiane - openChatAction");
           dispatch(
             openChatAction({
+              id: doc.id,
               ...doc.data(),
               lastEdit: transformMomentToString(transformUnknownDateFormat(doc.data().lastEdit)),
               creationTime: transformMomentToString(transformUnknownDateFormat(doc.data().creationTime)),

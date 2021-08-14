@@ -61,7 +61,7 @@ const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) 
 
   //animacja out - nadpisuje funkcje wychodzenia i dodaje on complete
   const handleCloseAnimation = () => {
-    gsap.to(elRef.current, { backgroundColor: "transparent", duration: 2.5, onComplete: handleClose });
+    gsap.to(elRef.current, { backgroundColor: "transparent", duration: 1, onComplete: handleClose });
     gsap.to(elRef.current.children, { y: "100%", duration: 0.6 });
   };
 

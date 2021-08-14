@@ -57,13 +57,15 @@ function Sidebar() {
     const openChat = chats.find((c) => c.id === chat.id);
     if (openChat) {
       console.log("mam go 🚀");
-      const { lastEdit, lastName, lastAvatar, name } = openChat;
+      const { lastEdit, lastName, lastAvatar, name, creatorUid, id } = openChat;
       dispatch(
         updateChatAction({
           lastEdit: transformMomentToString(transformUnknownDateFormat(lastEdit)),
           lastName,
           lastAvatar,
           name,
+          creatorUid,
+          id,
         })
       );
     }
