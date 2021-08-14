@@ -117,7 +117,7 @@ function Chat() {
       </div>
 
       {/* chat messages */}
-      <div className="chat__messages">
+      <div className={`${!chat.open && "bg-gray-200"} chat__messages`}>
         {messages.map((mess, index) => (
           <div key={index}>
             <Message
@@ -134,8 +134,21 @@ function Chat() {
 
       {/* chat input */}
       <div className="chat__input">
-        <form onSubmit={sendMessage} className="chat__input-wrapper">
-          <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Message" />
+        <form
+          onSubmit={(e) => {
+            if (chat.open) sendMessage();
+            else {
+              e.preventDefault();
+              setInput("");
+            }
+          }}
+          className="chat__input-wrapper">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Message"
+            disabled={!chat.open ? true : false}
+          />
           <button type="submit">Send</button>
         </form>
         <IconButton>

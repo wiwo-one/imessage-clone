@@ -104,10 +104,7 @@ function Sidebar() {
           />
         </IconButton>
       </div>
-      <div>
-        {chat.name}
-        <br />
-      </div>
+
       <div className="sidebar__chats">
         {chats
           .filter((chat) => {
