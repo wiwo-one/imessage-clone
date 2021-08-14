@@ -11,7 +11,7 @@ import SendRoundedIcon from "@material-ui/icons/SendRounded";
 import { MenuGroup, MenuGroupElement, Left, Right, MenuHeader, Edit } from "./BottomSheetMenu";
 import { transformMomentToString, transformUnknownDateFormat } from "../utils";
 
-const NewChatBS = ({ open, handleClose }) => {
+const NewChatBS = React.forwardRef(({ open, handleClose }, ref) => {
   const [newName, setNewName] = useState("");
 
   const [tooShort, setTooShort] = useState(true);
@@ -64,7 +64,7 @@ const NewChatBS = ({ open, handleClose }) => {
   }, []);
 
   return (
-    <BottomSheet open={open} handleClose={handleClose}>
+    <BottomSheet open={open} handleClose={handleClose} ref={ref}>
       <div className={styles.Container}>
         <MenuHeader>
           <div className="text-xl font-extrabold text-center">New</div>
@@ -103,6 +103,6 @@ const NewChatBS = ({ open, handleClose }) => {
       </div>
     </BottomSheet>
   );
-};
+});
 
 export default NewChatBS;

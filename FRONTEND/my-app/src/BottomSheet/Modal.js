@@ -1,22 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
-const Modal = ({ open, handleClose, ...props }) => {
+const Modal = ({ open, handleClose, children, ...props }) => {
   const elRef = useRef();
-  const [firstRender, setFirstRender] = useState(true);
+  const propsChildrenRef = useRef();
+  const firstRender = useRef(true);
 
   const checkClick = (e) => {
-    if (elRef?.current?.contains(e.target)) {
+    //if (childrenRef.current[0]?.contains(e.target)) {
+    if (elRef.current.children[0]?.contains(e.target)) {
       console.log("INSIDE MODAL CLICK ✅");
       console.dir(e.target);
     } else {
       //debugger;
       console.log("OUTSIDE MODAL CLICK ❌");
-      //   if (firstRender) {
-      //     setFirstRender(false);
-      //     return;
-      //   }
-      //handleClose();
+      if (firstRender.current) {
+        firstRender.current = false;
+        return;
+      }
+      handleClose();
     }
   };
 
@@ -48,16 +50,30 @@ const Modal = ({ open, handleClose, ...props }) => {
     };
   }, []);
 
+  useEffect(() => {
+    console.dir(props.children);
+    //propsChildrenRef.current = props.children.ref;
+    //console.dir(propsChildrenRef.current);
+    return () => {};
+  }, []);
+
+  const childrenRef = useRef([]);
+
+  useEffect(() => {
+    console.log("Form Children", childrenRef.current);
+  }, []);
+
   return ReactDOM.createPortal(
-    <div
-      className="absolute top-0 left-0 z-50 w-full h-full bg-black bg-opacity-50"
-      onClick={() => {
-        //console.log("OUTSIDE MODAL CLICK ❌");
-      }}>
+    <div className="absolute top-0 left-0 z-50 w-full h-full bg-black bg-opacity-50" ref={elRef}>
       {/* props */}
-      <div className="" ref={elRef}>
-        {props.children}
-      </div>
+      {children}
+      {/* <>
+        {React.Children.map(children, (child, index) =>
+          React.cloneElement(child, {
+            ref: (ref) => (childrenRef.current[index] = ref),
+          })
+        )}
+      </> */}
     </div>,
     document.body
   );

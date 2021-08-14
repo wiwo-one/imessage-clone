@@ -11,7 +11,7 @@ import { selectChat, closeChatAction } from "../features/chatSlice";
 
 import moment from "moment";
 
-const ChatDetails = ({ open, handleClose }) => {
+const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
   const [newName, setNewName] = useState("");
 
   const user = useSelector(selectUser);
@@ -72,7 +72,7 @@ const ChatDetails = ({ open, handleClose }) => {
   };
 
   return (
-    <BottomSheet open={open} handleClose={handleClose}>
+    <BottomSheet open={open} handleClose={handleClose} ref={ref}>
       <div className={styles.Container}>
         <MenuHeader>
           <div className="text-xl font-extrabold text-center">{chat.name}</div>
@@ -145,6 +145,6 @@ const ChatDetails = ({ open, handleClose }) => {
       </div>
     </BottomSheet>
   );
-};
+});
 
 export default ChatDetails;
