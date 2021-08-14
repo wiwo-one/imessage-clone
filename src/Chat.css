@@ -3,7 +3,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100 * var(--vh));
 }
 
 .chat__header {
@@ -40,6 +40,7 @@ h4.chat__details {
   overflow: scroll;
   height: 100%;
   padding-bottom: 70px;
+  flex-grow: 20;
 }
 
 .chat__messages {
