@@ -1,24 +1,28 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./Chat.css";
 import Message from "./Message";
-import MicNoneIcon from "@material-ui/icons/MicNone";
+import SendRoundedIcon from "@material-ui/icons/SendRounded";
 import { Avatar, IconButton } from "@material-ui/core";
 import db from "./Firebase";
 
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "./features/userSlice";
-import { selectChat, openChatAction, closeChatAction } from "./features/chatSlice";
+import { selectChat, openChatAction, updateChatAction, closeChatAction } from "./features/chatSlice";
 import moment from "moment";
 import { transformMomentToString, transformUnknownDateFormat } from "./utils";
 import { createRef } from "react";
 
+import ChatDetails from "./BottomSheet/ChatDetailsBS";
+
 //animacja nowych wiadomości
 import { Flipper, Flipped } from "react-flip-toolkit";
+import Modal from "./BottomSheet/Modal";
 
 function Chat() {
   //redux
   const user = useSelector(selectUser);
   const chat = useSelector(selectChat);
+  const dispatch = useDispatch();
 
   const [input, setInput] = useState("");
 
@@ -39,9 +43,10 @@ function Chat() {
         creationTime: new Date(),
       })
       .then(() => {
+        const actualDate = new Date();
         db.collection("chats")?.doc(chat.id).set(
           {
-            lastEdit: new Date(),
+            lastEdit: actualDate,
             lastName: user.displayName,
             lastAvatar: user.photo,
           },
@@ -79,66 +84,89 @@ function Chat() {
   //sorting using array.sort to compare dates in moment format
   const sortByCreationTime = (chats) => chats.sort((a, b) => moment(a.creationTime) - moment(b.creationTime));
 
-  // const lastMessageCallbackRef = useCallback(
-  //   (node) => {
-  //     node.scrollIntoView();
-  //     console.log("lastMessageCallbackRef");
-  //   },
-  //   [messages]
-  // );
-
   const lastMessageRef = createRef();
 
   useEffect(() => {
     if (lastMessageRef && lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView();
     }
+    //for flipper... doesn't work
+    setChangeCounter(changeCounter + 1);
   }, [messages]);
 
-  //to point last message
+  //to point last message - for flipper
+  const [changeCounter, setChangeCounter] = useState(0);
+
+  //details modal
+  const [isEditChatBSOpen, setIsEditChatBSOpen] = useState(false);
+
+  const [isTestVisible, setIsTestVisible] = useState(false);
 
   return (
     <div className="chat">
       {/* chat header */}
       <div className="chat__header">
         <h4>Chat: {chat.open ? chat.name : "---"}</h4>
-        <h4 className="chat__details">Details</h4>
+        <h4
+          onClick={() => {
+            setIsEditChatBSOpen(true);
+          }}
+          className="chat__details">
+          Details
+        </h4>
       </div>
 
       {/* chat messages */}
       <div className="chat__messages">
-        <Flipper flipKey={messages.length} onComplete={() => console.log("oncomplete of flip")}>
-          {messages.map((mess, index) => (
-            <Flipped
-              key={mess.id}
-              onComplete={(el) => {
-                console.log("Flpped onComplete + Element: ");
-                console.dir(el);
-              }}>
-              <Message
-                key={index}
-                incomming={mess.authorUid === user.uid ? true : false}
-                content={mess.content}
-                {...mess}
-                creationTime={transformMomentToString(mess.creationTime)}
-                ref={lastMessageRef}
-              />
-            </Flipped>
-          ))}
-        </Flipper>
+        {messages.map((mess, index) => (
+          <div key={index}>
+            <Message
+              key={index}
+              incomming={mess.authorUid === user.uid}
+              content={mess.content}
+              {...mess}
+              creationTime={transformMomentToString(mess.creationTime)}
+              ref={lastMessageRef}
+            />
+          </div>
+        ))}
       </div>
 
       {/* chat input */}
-
       <div className="chat__input">
-        <form className="chat__input-wrapper">
+        <form onSubmit={sendMessage} className="chat__input-wrapper">
           <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Message" />
-          <button onClick={sendMessage}>Send</button>
+          <button type="submit">Send</button>
         </form>
         <IconButton>
-          <MicNoneIcon />
+          <SendRoundedIcon
+            onClick={() => {
+              setIsTestVisible(!isTestVisible);
+            }}
+          />
         </IconButton>
+        {isTestVisible && (
+          <Modal>
+            <div className="bg-green-300 w-96 h-96">
+              <h1>Test</h1>
+            </div>
+          </Modal>
+        )}
       </div>
+      {isEditChatBSOpen && (
+        <Modal
+          open={isEditChatBSOpen}
+          handleClose={() => {
+            setIsEditChatBSOpen(false);
+          }}>
+          <ChatDetails
+            open={isEditChatBSOpen}
+            handleClose={() => {
+              setIsEditChatBSOpen(false);
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 }

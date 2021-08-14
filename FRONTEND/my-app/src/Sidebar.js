@@ -10,16 +10,18 @@ import AddCommentIcon from "@material-ui/icons/AddComment";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "./features/userSlice";
-import { selectChat, openChatAction, closeChatAction } from "./features/chatSlice";
+import { selectChat, openChatAction, closeChatAction, updateChatAction } from "./features/chatSlice";
 import db, { auth } from "./Firebase";
 import NewChatBS from "./BottomSheet/NewChatBS";
 import { handlePLDateString, transformUnknownDateFormat, transformMomentToString } from "./utils";
 import moment from "moment";
+import Modal from "./BottomSheet/Modal";
 
 function Sidebar() {
   const user = useSelector(selectUser);
   const chat = useSelector(selectChat);
   const dispatch = useDispatch();
+  const chatId = useSelector((s) => s.chat.id);
 
   const [chats, setChats] = useState([]);
 
@@ -42,12 +44,30 @@ function Sidebar() {
         }))
       );
       setChats(sortedChats);
-      //sortChatsByDate(chats);
+      console.log("Aktualnie otwarty chat to: " + chat);
     });
     return () => {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    console.log("zmiana w czatach, aktualnie otwarty to " + chat.name);
+
+    const openChat = chats.find((c) => c.id === chat.id);
+    if (openChat) {
+      console.log("mam go 🚀");
+      const { lastEdit, lastName, lastAvatar, name } = openChat;
+      dispatch(
+        updateChatAction({
+          lastEdit: transformMomentToString(transformUnknownDateFormat(lastEdit)),
+          lastName,
+          lastAvatar,
+          name,
+        })
+      );
+    }
+  }, [chats]);
 
   const handleChatClick = (doc) => {
     dispatch(
@@ -66,13 +86,15 @@ function Sidebar() {
   //add new chat modal
   const [isNewChatBSOpen, setIsNewChatBSOpen] = useState(false);
 
+  const [searchPhrase, setSearchPhrase] = useState("");
+
   return (
     <div className="sidebar">
       <div className="sidebar__header">
         <Avatar onClick={() => auth.signOut()} src={user.photo} className="sidebar__avatar" />
         <div className="sidebar__search">
           <SearchIcon />
-          <input placeholder="Search" />
+          <input placeholder="Search" onChange={(e) => setSearchPhrase(e.target.value)} />
         </div>
         <IconButton variant="outlined" className="sidebar__input-buttton">
           <AddCircleIcon
@@ -82,30 +104,46 @@ function Sidebar() {
           />
         </IconButton>
       </div>
-      <div className="sidebar__chats">
-        {chats.map((doc, index) => (
-          <div
-            key={doc.id}
-            onClick={() => {
-              handleChatClick(doc);
-            }}>
-            <SidebarChat
-              name={doc.name}
-              lastEdit={transformMomentToString(doc.lastEdit)}
-              lastName={doc.lastName}
-              lastAvatar={doc.lastAvatar}
-              isActive={doc.id === chat.id ? true : false}
-            />
-          </div>
-        ))}
+      <div>
+        {chat.name}
+        <br />
       </div>
-      {true && (
-        <NewChatBS
+      <div className="sidebar__chats">
+        {chats
+          .filter((chat) => {
+            if (searchPhrase === "") return true;
+            else if (chat.name.toLowerCase().includes(searchPhrase.toLowerCase())) return true;
+            else return false;
+          })
+          .map((doc, index) => (
+            <div
+              key={doc.id}
+              onClick={() => {
+                handleChatClick(doc);
+              }}>
+              <SidebarChat
+                name={doc.name}
+                lastEdit={transformMomentToString(doc.lastEdit)}
+                lastName={doc.lastName}
+                lastAvatar={doc.lastAvatar}
+                isActive={doc.id === chat.id ? true : false}
+              />
+            </div>
+          ))}
+      </div>
+      {isNewChatBSOpen && (
+        <Modal
           open={isNewChatBSOpen}
           handleClose={() => {
             setIsNewChatBSOpen(false);
-          }}
-        />
+          }}>
+          <NewChatBS
+            open={isNewChatBSOpen}
+            handleClose={() => {
+              setIsNewChatBSOpen(false);
+            }}
+          />
+        </Modal>
       )}
     </div>
   );

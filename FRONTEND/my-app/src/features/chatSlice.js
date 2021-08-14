@@ -5,26 +5,39 @@ export const chatSlice = createSlice({
   initialState: {
     open: false,
     name: "",
-    id: "",
-    creationDate: "",
+    id: "NOPE",
+    creationTime: "",
+    testData: {},
   },
   reducers: {
     openChatAction: (state, action) => {
       state.open = true;
-      const { name, id } = action.payload;
+      const { name, id, creationTime, lastAvatar, lastEdit, lastName } = action.payload;
       state.name = name;
       state.id = id;
-      //state.creationTime = creationTime;
+      state.creationTime = creationTime;
+      state.lastAvatar = lastAvatar;
+      state.lastEdit = lastEdit;
+      state.lastName = lastName;
       //state.data = {...action.payload.data, action.payload.data};
     },
+    updateChatAction: (state, action) => {
+      //console.dir({ ...state });
+      //console.dir({ ...action.payload });
+      state.testData = { ...state, ...action.payload };
+      state.lastEdit = action.payload.lastEdit;
+      state.lastName = action.payload.lastName;
+      state.lastAvatar = action.payload.lastAvatar;
+      state.name = action.payload.name;
+    },
     closeChatAction: (state) => {
+      //state = {};
       state.open = false;
-      state.data = {};
     },
   },
 });
 
-export const { openChatAction, closeChatAction } = chatSlice.actions;
+export const { openChatAction, updateChatAction, closeChatAction } = chatSlice.actions;
 
 export const selectChat = (state) => state.chat;
 

@@ -8,10 +8,12 @@ export const handlePLDateString = (date) => {
 export const transformUnknownDateFormat = (date) => {
   if (typeof date === "string") {
     return handlePLDateString(date);
+  } else if (date instanceof Date) {
+    return moment(date);
   }
   return moment(date.toDate());
 };
 
 export const transformMomentToString = (date) => {
-  return date.format("DD/MM/YYYY, hh:mm:ss");
+  return date.format("DD/MM/YYYY, HH:mm:ss");
 };
