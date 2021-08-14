@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/imessage-clone/static/css/main.5ba11cac.chunk.css",
-    "main.js": "/imessage-clone/static/js/main.dd41f586.chunk.js",
-    "main.js.map": "/imessage-clone/static/js/main.dd41f586.chunk.js.map",
+    "main.css": "/imessage-clone/static/css/main.dfabe423.chunk.css",
+    "main.js": "/imessage-clone/static/js/main.4fe7da1f.chunk.js",
+    "main.js.map": "/imessage-clone/static/js/main.4fe7da1f.chunk.js.map",
     "runtime-main.js": "/imessage-clone/static/js/runtime-main.607988cf.js",
     "runtime-main.js.map": "/imessage-clone/static/js/runtime-main.607988cf.js.map",
     "static/js/2.2a0cfb7d.chunk.js": "/imessage-clone/static/js/2.2a0cfb7d.chunk.js",
     "static/js/2.2a0cfb7d.chunk.js.map": "/imessage-clone/static/js/2.2a0cfb7d.chunk.js.map",
     "index.html": "/imessage-clone/index.html",
-    "static/css/main.5ba11cac.chunk.css.map": "/imessage-clone/static/css/main.5ba11cac.chunk.css.map",
+    "static/css/main.dfabe423.chunk.css.map": "/imessage-clone/static/css/main.dfabe423.chunk.css.map",
     "static/js/2.2a0cfb7d.chunk.js.LICENSE.txt": "/imessage-clone/static/js/2.2a0cfb7d.chunk.js.LICENSE.txt",
     "static/media/imessage-logo.2ee5a3f6.png": "/imessage-clone/static/media/imessage-logo.2ee5a3f6.png"
   },
   "entrypoints": [
     "static/js/runtime-main.607988cf.js",
     "static/js/2.2a0cfb7d.chunk.js",
-    "static/css/main.5ba11cac.chunk.css",
-    "static/js/main.dd41f586.chunk.js"
+    "static/css/main.dfabe423.chunk.css",
+    "static/js/main.4fe7da1f.chunk.js"
   ]
 }
