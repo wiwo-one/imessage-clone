@@ -14,6 +14,6 @@ Used:
 
 - React
 - Redux (to store active user)
-- Local Storage - to store active user
-- Firebase Firestore - as a realtime DB.
+- Local Storage - to store active chats
+- Firebase Firestore - realtime DB.
 - Firebase Auth
