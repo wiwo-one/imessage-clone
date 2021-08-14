@@ -8,7 +8,7 @@ export const MenuGroup = (props) => {
   return <div className="rounded-[14px] bg-imessage-gray sm:w-[640px] mt-4 p-4 w-full">{props.children}</div>;
 };
 
-export const MenuGroupButton = ({ className, ...props }) => {
+export const MenuGroupButton = ({ className, disable, ...props }) => {
   return (
     <div className={`rounded-[14px] bg-imessage-gray mt-4 p-4 px-8 ${className}`} {...props}>
       {props.children}
