@@ -1,6 +1,5 @@
 .chat {
   flex-grow: 6;
-  position: relative;
   display: flex;
   flex-direction: column;
   height: calc(100 * var(--vh));
@@ -54,7 +53,7 @@ h4.chat__details {
 
 .chat__input {
   height: 70px;
-  position: absolute;
+  /* //position: absolute; */
   bottom: 0;
   right: 0;
   width: 100%;
