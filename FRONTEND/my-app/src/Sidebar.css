@@ -1,5 +1,6 @@
 .sidebar {
-  flex: 0.35;
+  flex-grow: 1;
+
   height: 100vh;
   background-color: rgb(241, 241, 241);
   display: flex;
@@ -7,6 +8,14 @@
   z-index: 10;
 
   border-right: 1px solid lightgray;
+}
+
+@media (min-width: 640px) {
+  .sidebar {
+    /* flex-grow: 0.35; */
+    flex-grow: 1;
+    max-width: 380px;
+  }
 }
 
 .sidebar__header {

@@ -6,6 +6,7 @@
   align-items: center;
   height: 100%;
   width: 100%;
+
   /* background-color: white; */
   /* outline: 2px blue; */
 }
@@ -29,4 +30,5 @@
 .Content {
   flex-grow: 1;
   width: 100%;
+  padding: 0px 20px;
 }

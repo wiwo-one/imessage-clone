@@ -40,44 +40,14 @@ const BottomSheet = React.forwardRef(({ open, handleClose, children, ...props },
   // }, [ref]);
 
   return (
-    // <AnimatePresence>
-    <>
-      {/* {bottomSheetOpen && ( */}
-      <div
-        // initial={{ opacity: 1, y: "100vh" }}
-        // animate={{
-        //   opacity: 1,
-        //   y: "0%",
-        //   transition: {
-        //     type: "tween",
-        //     ease: "easeInOut",
-        //     delay: 0.5,
-        //     duration: 2,
-        //   },
-        // }}
-        // exit={{ opacity: 0, y: "100%" }}
-        style={defaultStyle}
-        ref={ref}>
-        <div className={styles.Container}>
-          <div onClick={handleClose} className={styles.Top}>
-            <h4>Done</h4>
-          </div>
-          <div className={styles.Content}>
-            {/* content */}
-            {/* <>
-            {React.Children.map(children, (child, index) =>
-              React.cloneElement(child, {
-                ref: (ref) => (childrenRef.current[index] = ref),
-              })
-            )}
-          </> */}
-            {children}
-          </div>
+    <div style={defaultStyle} ref={ref}>
+      <div className={styles.Container}>
+        <div onClick={handleClose} className={styles.Top}>
+          <h4>Done</h4>
         </div>
+        <div className={styles.Content}>{children}</div>
       </div>
-      {/* )} */}
-    </>
-    // </AnimatePresence>
+    </div>
   );
 });
 
