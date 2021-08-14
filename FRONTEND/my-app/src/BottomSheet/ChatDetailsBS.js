@@ -10,8 +10,12 @@ import { selectUser } from "../features/userSlice";
 import { selectChat, closeChatAction } from "../features/chatSlice";
 
 import moment from "moment";
+import gsap from "gsap/gsap-core";
 
 const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
+  const innerRef = React.useRef();
+  const deeperRef = React.useRef(null);
+
   const [newName, setNewName] = useState("");
 
   const user = useSelector(selectUser);
@@ -52,7 +56,6 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
   const inputRef = useCallback(
     (node) => {
       node?.focus();
-      console.dir(node);
     },
     [open]
   );
@@ -72,8 +75,8 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
   };
 
   return (
-    <BottomSheet open={open} handleClose={handleClose} ref={ref}>
-      <div className={styles.Container}>
+    <BottomSheet open={open} handleClose={handleClose} ref={innerRef}>
+      <div className={styles.Container} ref={deeperRef}>
         <MenuHeader>
           <div className="text-xl font-extrabold text-center">{chat.name}</div>
         </MenuHeader>

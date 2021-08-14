@@ -17,6 +17,7 @@ import ChatDetails from "./BottomSheet/ChatDetailsBS";
 //animacja nowych wiadomości
 import { Flipper, Flipped } from "react-flip-toolkit";
 import Modal from "./BottomSheet/Modal";
+import gsap from "gsap";
 
 function Chat() {
   //redux
@@ -31,6 +32,7 @@ function Chat() {
 
   const sendMessage = (e) => {
     e.preventDefault();
+    setIsMessageSent(true);
 
     db.collection("chats")
       ?.doc(chat.id)
@@ -81,17 +83,41 @@ function Chat() {
     };
   }, [chat]);
 
+  //reset when changing chat
+  useEffect(() => {
+    setIsMessageSent(false);
+    return () => {};
+  }, [chat]);
+
   //sorting using array.sort to compare dates in moment format
   const sortByCreationTime = (chats) => chats.sort((a, b) => moment(a.creationTime) - moment(b.creationTime));
 
   const lastMessageRef = createRef();
+  const messagesContainerRef = createRef();
+
+  const [isMessageSent, setIsMessageSent] = useState(false);
 
   useEffect(() => {
-    if (lastMessageRef && lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView();
+    // if (lastMessageRef && lastMessageRef.current) {
+    //   lastMessageRef.current.scrollIntoView();
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollBy(0, messagesContainerRef.current.scrollHeight);
     }
-    //for flipper... doesn't work
-    setChangeCounter(changeCounter + 1);
+
+    if (isMessageSent) {
+      console.log("isMessageSent", isMessageSent);
+      gsap.from(lastMessageRef.current, {
+        opacity: 0,
+        height: 0,
+        //transform: "scaleY(0)",
+        duration: 0.5,
+        onComplete: () => {
+          console.log("oncomplete animacji");
+        },
+      });
+    }
+
+    //setFirstLoad(false);
   }, [messages]);
 
   //to point last message - for flipper
@@ -101,6 +127,25 @@ function Chat() {
   const [isEditChatBSOpen, setIsEditChatBSOpen] = useState(false);
 
   const [isTestVisible, setIsTestVisible] = useState(false);
+
+  // const chatDetailsModalRef = useCallback((node) => {
+  //   if (node) {
+  //     gsap.from(node.children, { y: "100%", duration: 1 });
+  //     console.log("ANIIIMUJEEE");
+  //   }
+  // }, []);
+
+  const messageRefCallback = useCallback((node) => {
+    // const scrollDown = () => {
+    //   console.log("scrolluje z oncomplete");
+    //   node.scrollIntoView();
+    // };
+    // if (!firstLoad) {
+    //   gsap.from(node, { opacity: 0, height: 0, duration: 0.5, onComplete: node.scrollIntoView });
+    // }
+    console.log("z use callback");
+    //node.scrollIntoView();
+  }, []);
 
   return (
     <div className="chat">
@@ -117,9 +162,9 @@ function Chat() {
       </div>
 
       {/* chat messages */}
-      <div className={`${!chat.open && "bg-gray-200"} chat__messages`}>
+      <div ref={messagesContainerRef} className={`${!chat.open && "bg-gray-200"} chat__messages`}>
         {messages.map((mess, index) => (
-          <div key={index}>
+          <div key={index} ref={messageRefCallback}>
             <Message
               key={index}
               incomming={mess.authorUid === user.uid}
@@ -136,7 +181,7 @@ function Chat() {
       <div className="chat__input">
         <form
           onSubmit={(e) => {
-            if (chat.open) sendMessage();
+            if (chat.open) sendMessage(e);
             else {
               e.preventDefault();
               setInput("");
@@ -154,17 +199,10 @@ function Chat() {
         <IconButton>
           <SendRoundedIcon
             onClick={() => {
-              setIsTestVisible(!isTestVisible);
+              //setIsTestVisible(!isTestVisible);
             }}
           />
         </IconButton>
-        {isTestVisible && (
-          <Modal>
-            <div className="bg-green-300 w-96 h-96">
-              <h1>Test</h1>
-            </div>
-          </Modal>
-        )}
       </div>
       {isEditChatBSOpen && (
         <Modal
@@ -172,12 +210,7 @@ function Chat() {
           handleClose={() => {
             setIsEditChatBSOpen(false);
           }}>
-          <ChatDetails
-            open={isEditChatBSOpen}
-            handleClose={() => {
-              setIsEditChatBSOpen(false);
-            }}
-          />
+          <ChatDetails open={isEditChatBSOpen} />
         </Modal>
       )}
     </div>

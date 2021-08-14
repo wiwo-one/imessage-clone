@@ -1,14 +1,15 @@
+import gsap from "gsap/gsap-core";
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
-const Modal = ({ open, handleClose, children, ...props }) => {
+const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) => {
   const elRef = useRef();
   const propsChildrenRef = useRef();
   const firstRender = useRef(true);
 
   const checkClick = (e) => {
     //if (childrenRef.current[0]?.contains(e.target)) {
-    if (elRef.current.children[0]?.contains(e.target)) {
+    if (elRef.current?.children[0]?.contains(e.target)) {
       console.log("INSIDE MODAL CLICK ✅");
       console.dir(e.target);
     } else {
@@ -18,7 +19,7 @@ const Modal = ({ open, handleClose, children, ...props }) => {
         firstRender.current = false;
         return;
       }
-      handleClose();
+      handleCloseAnimation();
     }
   };
 
@@ -41,6 +42,7 @@ const Modal = ({ open, handleClose, children, ...props }) => {
       handleClose();
     }
   };
+
   useEffect(() => {
     //document.body.appendChild(elRef.current);
     //console.dir(elRef.current);
@@ -50,23 +52,33 @@ const Modal = ({ open, handleClose, children, ...props }) => {
     };
   }, []);
 
-  useEffect(() => {
-    console.dir(props.children);
-    //propsChildrenRef.current = props.children.ref;
-    //console.dir(propsChildrenRef.current);
-    return () => {};
+  ///animacje
+  React.useLayoutEffect(() => {
+    gsap.from(elRef.current, { opacity: 0, duration: 0.3 });
+    gsap.from(elRef.current.children, { y: "100%", duration: 0.6 });
+    console.log("Animuje w Modalu...");
   }, []);
+
+  //animacja out - nadpisuje funkcje wychodzenia i dodaje on complete
+  const handleCloseAnimation = () => {
+    gsap.to(elRef.current, { backgroundColor: "transparent", duration: 2.5, onComplete: handleClose });
+    gsap.to(elRef.current.children, { y: "100%", duration: 0.6 });
+  };
 
   const childrenRef = useRef([]);
 
   useEffect(() => {
     console.log("Form Children", childrenRef.current);
+    //children.props.handleClose = handleCloseAnimation;
   }, []);
 
   return ReactDOM.createPortal(
-    <div className="absolute top-0 left-0 z-50 w-full h-full bg-black bg-opacity-50" ref={elRef}>
+    <div
+      ref={elRef}
+      className="absolute top-0 left-0 z-50 w-full h-full overflow-hidden bg-black bg-opacity-50">
       {/* props */}
-      {children}
+      <>{React.cloneElement(children, { handleClose: handleCloseAnimation })}</>
+      {/* {children} */}
       {/* <>
         {React.Children.map(children, (child, index) =>
           React.cloneElement(child, {
@@ -77,7 +89,7 @@ const Modal = ({ open, handleClose, children, ...props }) => {
     </div>,
     document.body
   );
-};
+});
 export default Modal;
 
 //absolute top-0 left-0 z-50 flex items-center justify-center bg-green-300 w-96 h-96
