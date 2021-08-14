@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./Chat.css";
 import Message from "./Message";
 import SendRoundedIcon from "@material-ui/icons/SendRounded";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Avatar, IconButton } from "@material-ui/core";
 import db from "./Firebase";
 
@@ -89,17 +90,21 @@ function Chat() {
     return () => {};
   }, [chat]);
 
+  //close chat handling
+  const handleCloseChatClick = () => {
+    console.log("zamykam czat");
+    dispatch(closeChatAction());
+    setMessages([]);
+  };
+
   //sorting using array.sort to compare dates in moment format
   const sortByCreationTime = (chats) => chats.sort((a, b) => moment(a.creationTime) - moment(b.creationTime));
 
   const lastMessageRef = createRef();
   const messagesContainerRef = createRef();
-
   const [isMessageSent, setIsMessageSent] = useState(false);
 
   useEffect(() => {
-    // if (lastMessageRef && lastMessageRef.current) {
-    //   lastMessageRef.current.scrollIntoView();
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollBy(0, messagesContainerRef.current.scrollHeight);
     }
@@ -116,41 +121,18 @@ function Chat() {
         },
       });
     }
-
-    //setFirstLoad(false);
   }, [messages]);
-
-  //to point last message - for flipper
-  const [changeCounter, setChangeCounter] = useState(0);
 
   //details modal
   const [isEditChatBSOpen, setIsEditChatBSOpen] = useState(false);
-
-  const [isTestVisible, setIsTestVisible] = useState(false);
-
-  // const chatDetailsModalRef = useCallback((node) => {
-  //   if (node) {
-  //     gsap.from(node.children, { y: "100%", duration: 1 });
-  //     console.log("ANIIIMUJEEE");
-  //   }
-  // }, []);
-
-  const messageRefCallback = useCallback((node) => {
-    // const scrollDown = () => {
-    //   console.log("scrolluje z oncomplete");
-    //   node.scrollIntoView();
-    // };
-    // if (!firstLoad) {
-    //   gsap.from(node, { opacity: 0, height: 0, duration: 0.5, onComplete: node.scrollIntoView });
-    // }
-    console.log("z use callback");
-    //node.scrollIntoView();
-  }, []);
 
   return (
     <div className="chat">
       {/* chat header */}
       <div className="chat__header">
+        <IconButton onClick={handleCloseChatClick}>
+          <ArrowBackIosIcon />
+        </IconButton>
         <h4>Chat: {chat.open ? chat.name : "---"}</h4>
         <h4
           onClick={() => {
@@ -164,7 +146,7 @@ function Chat() {
       {/* chat messages */}
       <div ref={messagesContainerRef} className={`${!chat.open && "bg-gray-200"} chat__messages`}>
         {messages.map((mess, index) => (
-          <div key={index} ref={messageRefCallback}>
+          <div key={index}>
             <Message
               key={index}
               incomming={mess.authorUid === user.uid}

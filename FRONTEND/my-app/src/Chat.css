@@ -1,8 +1,9 @@
 .chat {
-  flex: 0.65;
+  flex-grow: 6;
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .chat__header {
@@ -32,12 +33,16 @@ h4.chat__details {
 
 .chat__messages {
   overflow: scroll;
-  /* height: 100vh; */
-  position: fixed;
-  top: 50px;
-  bottom: 70px;
-  right: 0;
-  left: 35vw;
+  height: 100%;
+}
+
+.chat__messages {
+  scrollbar-width: none; /* Firefox 64 */
+  -ms-overflow-style: none; /* Internet Explorer 11 */
+}
+.chat__messages::-webkit-scrollbar {
+  /** WebKit */
+  display: none;
 }
 
 .chat__input {
