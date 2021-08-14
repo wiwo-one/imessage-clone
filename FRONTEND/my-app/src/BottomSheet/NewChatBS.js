@@ -36,7 +36,6 @@ const NewChatBS = React.forwardRef(({ open, handleClose }, ref) => {
         console.dir(newChat.id);
 
         newChat.get().then((doc) => {
-          console.log("dispatchuje zmiane - openChatAction");
           dispatch(
             openChatAction({
               id: doc.id,

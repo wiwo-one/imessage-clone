@@ -12,13 +12,14 @@ export const chatSlice = createSlice({
   reducers: {
     openChatAction: (state, action) => {
       state.open = true;
-      const { name, id, creationTime, lastAvatar, lastEdit, lastName } = action.payload;
+      const { name, id, creationTime, lastAvatar, lastEdit, lastName, creatorUid } = action.payload;
       state.name = name;
       state.id = id;
       state.creationTime = creationTime;
       state.lastAvatar = lastAvatar;
       state.lastEdit = lastEdit;
       state.lastName = lastName;
+      state.creatorUid = creatorUid;
       //state.data = {...action.payload.data, action.payload.data};
     },
     updateChatAction: (state, action) => {

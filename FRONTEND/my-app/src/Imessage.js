@@ -22,10 +22,6 @@ function Imessage() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("⬅️➡️", innerWidth);
-  }, [innerWidth]);
-
   return (
     <div className="imessage">
       {innerWidth >= 640 && (

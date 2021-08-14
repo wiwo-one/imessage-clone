@@ -9,12 +9,8 @@ const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) 
 
   const checkClick = (e) => {
     //if (childrenRef.current[0]?.contains(e.target)) {
-    if (elRef.current?.children[0]?.contains(e.target)) {
-      console.log("INSIDE MODAL CLICK ✅");
-      console.dir(e.target);
-    } else {
-      //debugger;
-      console.log("OUTSIDE MODAL CLICK ❌");
+    if (!elRef.current?.children[0]?.contains(e.target)) {
+      //outside modal click
       if (firstRender.current) {
         firstRender.current = false;
         return;
@@ -38,7 +34,7 @@ const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) 
       isEscape = evt.keyCode === 27;
     }
     if (isEscape) {
-      console.log("ESC PRESSED. key=" + evt.key + " keyCode=" + evt.keyCode);
+      //console.log("ESC PRESSED. key=" + evt.key + " keyCode=" + evt.keyCode);
       handleClose();
     }
   };
@@ -56,7 +52,6 @@ const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) 
   React.useLayoutEffect(() => {
     gsap.from(elRef.current, { opacity: 0, duration: 0.3 });
     gsap.from(elRef.current.children, { y: "100%", duration: 0.6 });
-    console.log("Animuje w Modalu...");
   }, []);
 
   //animacja out - nadpisuje funkcje wychodzenia i dodaje on complete
@@ -66,11 +61,6 @@ const Modal = React.forwardRef(({ open, handleClose, children, ...props }, ref) 
   };
 
   const childrenRef = useRef([]);
-
-  useEffect(() => {
-    console.log("Form Children", childrenRef.current);
-    //children.props.handleClose = handleCloseAnimation;
-  }, []);
 
   return ReactDOM.createPortal(
     <div

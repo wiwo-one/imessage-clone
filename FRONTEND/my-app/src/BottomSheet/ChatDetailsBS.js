@@ -11,6 +11,7 @@ import { selectChat, closeChatAction } from "../features/chatSlice";
 
 import moment from "moment";
 import gsap from "gsap/gsap-core";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
   const innerRef = React.useRef();
@@ -74,42 +75,56 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
       });
   };
 
+  const [isMyChat, setIsMyChat] = useState(chat.creatorUid === user.uid);
+
   return (
     <BottomSheet open={open} handleClose={handleClose} ref={innerRef}>
       <div className={styles.Container} ref={deeperRef}>
         <MenuHeader>
           <div className="text-xl font-extrabold text-center">{chat.name}</div>
+          <div className="text-xs font-light text-center text-imessage-dark-gray-2">
+            {chat.creatorUid === user.uid ? "You've created this chat. You can edit." : ""}
+          </div>
         </MenuHeader>
 
-        <MenuGroup>
-          <MenuGroupElement>
-            <Left type="edit">Chat Name</Left>
+        {isMyChat && (
+          <MenuGroup>
+            <MenuGroupElement>
+              <Left type="edit">Chat Name</Left>
 
-            <form onSubmit={handleChangeNameSubmit} className="flex-1 ml-10">
-              <div className="flex items-center justify-between w-full">
-                <input
-                  //autoFocus
-                  ref={inputRef}
-                  className="flex-grow bg-transparent border-0 border-transparent border-black focus-visible:outline-none"
-                  value={newName}
-                  onChange={(e) => {
-                    setNewName(e.target.value);
-                  }}
-                />
-                {tooShort ? (
-                  <div className="flex-shrink-0 text-xs text-red-600 justify-self-end">
-                    The name is too short. Correct it.
-                  </div>
-                ) : (
-                  <button type="submit" className="p-0">
-                    <SendRoundedIcon color={tooShort ? "disabled" : "primary"} />
-                  </button>
-                )}
-              </div>
-            </form>
-          </MenuGroupElement>
-        </MenuGroup>
-
+              <form onSubmit={handleChangeNameSubmit} className="flex-1 ml-10">
+                <div className="flex items-center justify-between w-full">
+                  <input
+                    //autoFocus
+                    ref={inputRef}
+                    className="flex-grow bg-transparent border-0 border-transparent border-black focus-visible:outline-none"
+                    value={newName}
+                    disable={!isMyChat}
+                    onChange={(e) => {
+                      setNewName(e.target.value);
+                    }}
+                  />
+                  <AnimatePresence exitBeforeEnter>
+                    {tooShort ? (
+                      <motion.div
+                        key={tooShort}
+                        initial={{ x: "200px" }}
+                        animate={{ opacity: 1, x: "0px" }}
+                        exit={{ opacity: 0, x: "200px" }}
+                        className="flex-shrink-0 text-xs text-red-600 opacity-0 justify-self-end">
+                        Name is too short.
+                      </motion.div>
+                    ) : (
+                      <button type="submit" className="p-0">
+                        <SendRoundedIcon color={tooShort ? "disabled" : "primary"} />
+                      </button>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </form>
+            </MenuGroupElement>
+          </MenuGroup>
+        )}
         <MenuGroup>
           <MenuGroupElement>
             <Left>Chat Name</Left>
@@ -122,6 +137,10 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
           <MenuGroupElement>
             <Left>creationTime</Left>
             <Right>{chat.creationTime}</Right>
+          </MenuGroupElement>
+          <MenuGroupElement>
+            <Left>creatorUid</Left>
+            <Right>{chat?.creatorUid}</Right>
           </MenuGroupElement>
           <MenuGroupElement>
             <Left>lastEdit</Left>
@@ -139,16 +158,16 @@ const ChatDetails = React.forwardRef(({ open, handleClose }, ref) => {
             <Left>lastAvatar</Left>
             <Right>{chat?.lastAvatar?.slice(0, 150)}</Right>
           </MenuGroupElement>
-          <MenuGroupElement>
-            <Left>creatorUid</Left>
-            <Right>{chat?.creatorUid}</Right>
-          </MenuGroupElement>
         </MenuGroup>
-        <MenuGroupButton
-          onClick={handleDelete}
-          className="transition-all duration-150 hover:bg-imessage-dark-gray">
-          <MenuGroupElement className="font-bold text-red-600">Delete</MenuGroupElement>
-        </MenuGroupButton>
+        {isMyChat && (
+          <MenuGroupButton
+            onClick={isMyChat ? handleDelete : null}
+            className={`transition-all duration-150 hover:bg-imessage-dark-gray`}>
+            <MenuGroupElement className={`font-bold ${isMyChat ? "text-red-600" : "text-gray-400"}`}>
+              Delete
+            </MenuGroupElement>
+          </MenuGroupButton>
+        )}
       </div>
     </BottomSheet>
   );

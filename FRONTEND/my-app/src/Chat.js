@@ -56,7 +56,7 @@ function Chat() {
               lastAvatar: user.photo,
             })
             .then((s) => {
-              console.log("edytowalem info w chatcie");
+              //console.log("edytowalem info w chatcie");
             })
             .catch((e) => {
               console.log("error przy edycji chatu (zmiana ostatnich) ", e);
@@ -104,7 +104,6 @@ function Chat() {
 
   //close chat handling
   const handleCloseChatClick = () => {
-    console.log("zamykam czat");
     dispatch(closeChatAction());
     setMessages([]);
   };
@@ -128,9 +127,6 @@ function Chat() {
         height: 0,
         //transform: "scaleY(0)",
         duration: 0.5,
-        onComplete: () => {
-          console.log("oncomplete animacji");
-        },
       });
     }
   }, [messages]);
@@ -145,7 +141,10 @@ function Chat() {
         <IconButton onClick={handleCloseChatClick}>
           <ArrowBackIosIcon />
         </IconButton>
-        <h4>Chat: {chat.open ? chat.name : "---"}</h4>
+        <div className="header__chat-name">
+          <h4>{chat.open ? chat.name : ""}</h4>
+        </div>
+
         <h4
           onClick={() => {
             setIsEditChatBSOpen(true);
@@ -172,38 +171,40 @@ function Chat() {
       </div>
 
       {/* chat input */}
-      <div className="chat__input">
-        <form
-          onSubmit={(e) => {
-            if (chat.open) sendMessage(e);
-            else {
-              e.preventDefault();
-              setInput("");
-            }
-          }}
-          className="chat__input-wrapper">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Message"
-            disabled={!chat.open ? true : false}
-          />
-          <button type="submit">Send</button>
-        </form>
-        <IconButton>
-          <SendRoundedIcon
-            onClick={() => {
-              //setIsTestVisible(!isTestVisible);
+      {chat.open && (
+        <div className="chat__input">
+          <form
+            onSubmit={(e) => {
+              if (chat.open) sendMessage(e);
+              else {
+                e.preventDefault();
+                setInput("");
+              }
             }}
-          />
-        </IconButton>
-      </div>
+            className="chat__input-wrapper">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Message"
+              disabled={!chat.open ? true : false}
+            />
+            {/* <button type="submit">Send</button> */}
+            <IconButton
+              type="submit"
+              onClick={() => {
+                //setIsTestVisible(!isTestVisible);
+              }}>
+              <SendRoundedIcon />
+            </IconButton>
+          </form>
+        </div>
+      )}
       {isEditChatBSOpen && (
         <Modal
           open={isEditChatBSOpen}
           handleClose={() => {
             setIsEditChatBSOpen(false);
-            handleCloseChatClick();
+            // setMessages([]);
           }}>
           <ChatDetails open={isEditChatBSOpen} />
         </Modal>

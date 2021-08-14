@@ -22,6 +22,11 @@
     right: 0; */
 }
 
+.header__chat-name {
+  width: 250px;
+  text-align: center;
+}
+
 h4 {
   padding-right: 20px;
   font-size: 14px;
@@ -34,7 +39,7 @@ h4.chat__details {
 .chat__messages {
   overflow: scroll;
   height: 100%;
-  margin-bottom: 70px;
+  padding-bottom: 70px;
 }
 
 .chat__messages {
@@ -48,7 +53,6 @@ h4.chat__details {
 
 .chat__input {
   height: 70px;
-
   position: absolute;
   bottom: 0;
   right: 0;
@@ -62,22 +66,41 @@ h4.chat__details {
 }
 
 form.chat__input-wrapper {
-  background-color: #fff;
-  border-radius: 10px;
-  width: 70%;
-  margin-right: 20px;
+  width: 100%;
   display: flex;
+  align-items: center;
+  margin: 0 10px;
 }
 
 .chat__input input {
-  width: 100%;
-  height: 25px;
-  background: transparent;
+  /* width: 100%; */
+  margin-right: 8px;
+  height: 35px;
   outline-width: 0;
   border: 0;
   padding-left: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 100%;
+
+  display: flex;
+}
+.chat__input > form > button {
+  padding: 0;
 }
 
-.chat__input > form > button {
-  display: none;
+@media (min-width: 768px) {
+  form.chat__input-wrapper {
+    width: 70%;
+    /* min-width: 370px; */
+  }
+
+  .chat__input input {
+    margin-right: 20px;
+  }
+
+  .chat__input > form > button {
+    /* display: none; */
+    padding: 10px;
+  }
 }

@@ -44,7 +44,7 @@ function Sidebar() {
         }))
       );
       setChats(sortedChats);
-      console.log("Aktualnie otwarty chat to: " + chat);
+      //console.log("Aktualnie otwarty chat to: " + chat);
     });
     return () => {
       unsubscribe();
@@ -52,11 +52,8 @@ function Sidebar() {
   }, []);
 
   useEffect(() => {
-    console.log("zmiana w czatach, aktualnie otwarty to " + chat.name);
-
     const openChat = chats.find((c) => c.id === chat.id);
     if (openChat) {
-      console.log("mam go 🚀");
       const { lastEdit, lastName, lastAvatar, name, creatorUid, id } = openChat;
       dispatch(
         updateChatAction({
