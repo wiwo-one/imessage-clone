@@ -10,6 +10,19 @@ function App() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
+  const onResize = () => {
+    document.querySelector(":root").style.setProperty("--vh", window.innerHeight / 100 + "px");
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    onResize();
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
